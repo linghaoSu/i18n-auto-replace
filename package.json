@@ -6,11 +6,15 @@
   },
   "name": "i18n-auto-replace",
   "displayName": "I18n Auto Replace",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "packageManager": "pnpm@7.0.1",
   "description": "",
   "license": "MIT",
   "main": "./dist/index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/linghaoSu/i18n-auto-replace"
+  },
   "files": [
     "dist"
   ],
