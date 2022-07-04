@@ -1,5 +1,6 @@
 import { sep } from 'path'
 import { Uri, workspace } from 'vscode'
+import { Log } from './log'
 import { getSettings } from './settings'
 import { getAbsoluteUri, getRelativePath, getWorkspaceInfo } from './utils'
 
@@ -73,7 +74,14 @@ export async function onRenameFile(oldUri: Uri, newUri: Uri) {
 
       const newLocaleFileUri = Uri.joinPath(info.uri, ...settings.localeLocation, dir[0], ...newUriRelativePathList)
 
-      rename(oldLocaleFileUri, newLocaleFileUri)
+      rename(oldLocaleFileUri, newLocaleFileUri).then(() => {
+
+      }, () => {
+        Log.error({
+          name: 'RENAME -> ',
+          message: `from ${oldLocaleFileUri.toString()} to ${newLocaleFileUri.toString()} Failed.`,
+        })
+      })
     }
   })
 }

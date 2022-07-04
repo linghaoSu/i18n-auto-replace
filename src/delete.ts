@@ -1,5 +1,6 @@
 import { sep } from 'path'
 import { Uri, workspace } from 'vscode'
+import { Log } from './log'
 import { getSettings } from './settings'
 import { getAbsoluteUri, getRelativePath, getWorkspaceInfo, isInSrc, isTargetFile } from './utils'
 
@@ -46,7 +47,14 @@ export async function onDeleteFile(uri: Uri) {
   localesDirs.forEach((dir) => {
     if (info.uri) {
       const targetPath = Uri.joinPath(info.uri, ...settings.localeLocation, dir[0], ...relativePathList)
-      deleteFile(targetPath)
+      deleteFile(targetPath).then(() => {
+
+      }, () => {
+        Log.error({
+          name: 'DELETE -> ',
+          message: `${targetPath.toString()} Failed.`,
+        })
+      })
     }
   })
 }

@@ -1,5 +1,6 @@
 import { sep } from 'path'
 import { Uri, workspace } from 'vscode'
+import { Log } from './log'
 import { getSettings } from './settings'
 import { emptyJSONContent, getAbsoluteUri, getRelativePath, getWorkspaceInfo, isInSrc, isTargetFile } from './utils'
 
@@ -57,7 +58,14 @@ export async function onCreateFile(uri: Uri) {
       const targetPath = Uri.joinPath(info.uri, ...settings.localeLocation, dir[0], ...relativePathList)
 
       readFile(targetPath).then(() => { }, () => {
-        writeFile(targetPath, Buffer.from(emptyJSONContent))
+        writeFile(targetPath, Buffer.from(emptyJSONContent)).then(() => {
+
+        }, () => {
+          Log.error({
+            name: 'CREATE -> ',
+            message: `${targetPath.toString()} Failed.`,
+          })
+        })
       })
     }
   })
