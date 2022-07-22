@@ -6,7 +6,7 @@
   },
   "name": "i18n-auto-replace",
   "displayName": "I18n Auto Replace",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "packageManager": "pnpm@7.0.1",
   "description": "",
   "license": "MIT",
@@ -81,8 +81,19 @@
           "type": "boolean",
           "default": false,
           "description": "是否在删除一个被检测文件时去删除对应的 i18n 文件，默认不删除"
+        },
+        "i18n-auto-replace.defaultLocaleLang": {
+          "type": "string",
+          "default": "zh-CN",
+          "description": "默认打开的 locale 文件"
         }
       }
-    }
+    },
+    "commands": [
+      {
+        "command": "extension.openLocaleFile",
+        "title": "Open paired locale file"
+      }
+    ]
   }
 }
