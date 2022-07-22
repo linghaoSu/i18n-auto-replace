@@ -7,12 +7,14 @@ const LOCALE_PATH_KEY = 'localePath'
 const EXT_KEY = 'ext'
 const ENABLE_DELETE_KEY = 'enableDelete'
 const SRC_PATH_KEY = 'srcPath'
+const DEFAULT_LOCALE = 'defaultLocale'
 
 interface ReplaceSettings {
   localePath: string[]
   ext: string[]
   enableDelete: boolean
   srcPath: string[]
+  defaultLocale: string
 }
 
 const replaceSettings: ReplaceSettings = {
@@ -20,6 +22,7 @@ const replaceSettings: ReplaceSettings = {
   ext: ['vue'],
   enableDelete: false,
   srcPath: ['src'],
+  defaultLocale: 'zh-CN',
 }
 
 const usedSettings = {
@@ -27,6 +30,7 @@ const usedSettings = {
   srcLocation: replaceSettings.srcPath.join(sep),
   localeLocation: replaceSettings.localePath,
   enableDelete: replaceSettings.enableDelete,
+  defaultLocale: replaceSettings.defaultLocale,
 }
 
 // .*(\.(vue|ts))$
@@ -42,6 +46,7 @@ export function updateSettings() {
   replaceSettings.ext = settings.get(EXT_KEY, ['vue'])
   replaceSettings.enableDelete = settings.get(ENABLE_DELETE_KEY, false)
   replaceSettings.srcPath = settings.get(SRC_PATH_KEY, ['src'])
+  replaceSettings.defaultLocale = settings.get(DEFAULT_LOCALE, 'zh-CN')
 
   applySettings()
 }
@@ -52,6 +57,7 @@ function applySettings() {
     srcLocation: replaceSettings.srcPath.join(sep),
     localeLocation: replaceSettings.localePath,
     enableDelete: replaceSettings.enableDelete,
+    DEFAULT_LOCALE: replaceSettings.defaultLocale,
   })
 }
 

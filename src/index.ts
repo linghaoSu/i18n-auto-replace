@@ -1,9 +1,10 @@
-import { type Disposable, workspace } from 'vscode'
+import { type Disposable, commands, window, workspace } from 'vscode'
 import { disposeSettingListener, getSettings, initialSetting } from './settings'
 import { onCreateFile } from './create'
 import { onRenameFile } from './rename'
 import { onDeleteFile } from './delete'
 import { Log } from './log'
+import { openLocaleFile } from './openLocale'
 
 let createListenerHandler: Disposable | undefined
 let renameListenerHandler: Disposable | undefined
@@ -12,6 +13,12 @@ let deleteListenerHandler: Disposable | undefined
 export function activate() {
   Log.info('i18n auto replace activated! ')
   initialSetting()
+
+  commands.registerCommand('extension.openLocaleFile', () => {
+    const { activeTextEditor } = window
+    if (activeTextEditor?.document?.fileName)
+      openLocaleFile(activeTextEditor?.document?.fileName)
+  })
 
   // only support single workspace for now
 
