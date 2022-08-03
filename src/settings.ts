@@ -7,7 +7,7 @@ const LOCALE_PATH_KEY = 'localePath'
 const EXT_KEY = 'ext'
 const ENABLE_DELETE_KEY = 'enableDelete'
 const SRC_PATH_KEY = 'srcPath'
-const DEFAULT_LOCALE = 'defaultLocale'
+const DEFAULT_LOCALE = 'defaultLocaleLang'
 
 interface ReplaceSettings {
   localePath: string[]

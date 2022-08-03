@@ -91,9 +91,22 @@
     },
     "commands": [
       {
-        "command": "extension.openLocaleFile",
+        "command": "i18n-auto-replace.openLocaleFile",
         "title": "Open paired locale file"
+      },
+      {
+        "command": "i18n-auto-replace.copyRelativeKeyPath",
+        "title": "Copy relative key path"
       }
-    ]
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "i18n-auto-replace.copyRelativeKeyPath",
+          "title": "copy relative key path",
+          "group": "i18n-auto-replace"
+        }
+      ]
+    }
   }
 }
