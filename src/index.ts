@@ -1,5 +1,5 @@
 import { sep } from 'path'
-import { type Disposable, type Uri, commands, env, window, workspace } from 'vscode'
+import { type Disposable, SnippetString, Uri, commands, env, window, workspace } from 'vscode'
 import { disposeSettingListener, getSettings, initialSetting } from './settings'
 import { onCreateFile } from './create'
 import { onRenameFile } from './rename'
@@ -22,8 +22,24 @@ export function activate() {
       openLocaleFile(activeTextEditor?.document?.fileName)
   })
 
-  commands.registerCommand('i18n-auto-replace.copyRelativeKeyPath', (filename: Uri) => {
-    const path = getRelativePath(filename.toString())
+  commands.registerCommand('i18n-auto-replace.copyRelativeKeyPath', (filename?: Uri) => {
+    let path: false | string = false
+    const { activeTextEditor } = window
+
+    if (filename) {
+      path = getRelativePath(filename.toString())
+    }
+    else {
+      if (activeTextEditor?.document?.fileName) {
+        const activeFileName = activeTextEditor?.document?.fileName
+        const uri = Uri.file(activeFileName)
+
+        const activePath = uri.toString()
+
+        path = getRelativePath(activePath)
+      }
+    }
+
     if (!path)
       return
 
@@ -34,8 +50,15 @@ export function activate() {
     if (pathList[0] === 'src') {
       const targetPathList = pathList.slice(1)
       const keyPath = targetPathList.join('.')
-      Log.info(`[COPY PATH]: ${keyPath}`)
-      env.clipboard.writeText(keyPath)
+
+      if (filename) {
+        Log.info(`[COPY PATH]: ${keyPath}`)
+        env.clipboard.writeText(keyPath)
+      }
+      else {
+        Log.info(`[INSERT PATH]: ${keyPath}`)
+        activeTextEditor?.insertSnippet(new SnippetString(keyPath))
+      }
     }
     else {
       Log.warn('[COPY PATH]: not in src dir')
