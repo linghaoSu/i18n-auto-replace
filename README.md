@@ -7,6 +7,11 @@
 
 auto replace i18n key path when create or rename file in src
 
+- support more type
+- quick create locale file
+- move directory
+- change path = search full workspace
+
 ## License
 
 [MIT](./LICENSE) License © 2022
