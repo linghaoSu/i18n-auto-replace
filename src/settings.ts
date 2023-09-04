@@ -19,7 +19,7 @@ interface ReplaceSettings {
 
 const replaceSettings: ReplaceSettings = {
   localePath: ['src', 'locales'],
-  ext: ['vue'],
+  ext: ['vue', 'ts'],
   enableDelete: false,
   srcPath: ['src'],
   defaultLocale: 'zh-CN',

@@ -6,7 +6,7 @@ import { onRenameFile } from './rename'
 import { onDeleteFile } from './delete'
 import { Log } from './log'
 import { openLocaleFile } from './openLocale'
-import { getRelativePath } from './utils'
+import { getLocaleList, getRelativePath } from './utils'
 
 let createListenerHandler: Disposable | undefined
 let renameListenerHandler: Disposable | undefined
@@ -15,6 +15,29 @@ let deleteListenerHandler: Disposable | undefined
 export function activate() {
   Log.info('i18n auto replace activated! ')
   initialSetting()
+
+  commands.registerCommand('i18n-auto-replace.openSpecificLocaleFile', async () => {
+    const { activeTextEditor } = window
+    if (activeTextEditor?.document?.fileName) {
+      const localeList = await getLocaleList()
+
+      if (localeList) {
+        const locale = await window.showQuickPick(
+          localeList,
+          {
+            canPickMany: false,
+          },
+        )
+        openLocaleFile(activeTextEditor?.document?.fileName, locale)
+      }
+    }
+  })
+
+  commands.registerCommand('i18n-auto-replace.quickCreatePairedLocaleFile', async () => {
+    const { activeTextEditor } = window
+    if (activeTextEditor?.document?.fileName)
+      onCreateFile(activeTextEditor.document.uri)
+  })
 
   commands.registerCommand('i18n-auto-replace.openLocaleFile', () => {
     const { activeTextEditor } = window

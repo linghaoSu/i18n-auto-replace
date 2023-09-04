@@ -30,7 +30,7 @@
     "lint": "eslint .",
     "test": "vitest",
     "build": "tsup src/index.ts --external vscode",
-    "release": "bumpp --commit --push --tag && pnpm publish",
+    "release": "bumpp --commit --push --tag",
     "publish": "vsce publish --no-dependencies",
     "typecheck": "tsc --noEmit",
     "vscode:prepublish": "pnpm build"
@@ -91,12 +91,24 @@
     },
     "commands": [
       {
+        "command": "i18n-auto-replace.openSpecificLocaleFile",
+        "title": "Open paired specified locale file"
+      },
+      {
         "command": "i18n-auto-replace.openLocaleFile",
         "title": "Open paired locale file"
       },
       {
         "command": "i18n-auto-replace.copyRelativeKeyPath",
         "title": "Copy relative key path"
+      },
+      {
+        "command": "i18n-auto-replace.copyRelativeKeyPath",
+        "title": "Copy relative key path"
+      },
+      {
+        "command": "i18n-auto-replace.quickCreatePairedLocaleFile",
+        "title": "Quick create paired locale file"
       }
     ],
     "menus": {
