@@ -92,22 +92,27 @@
     "commands": [
       {
         "command": "i18n-auto-replace.openSpecificLocaleFile",
+        "category": "I18n Auto Replace",
         "title": "Open paired specified locale file"
       },
       {
         "command": "i18n-auto-replace.openLocaleFile",
+        "category": "I18n Auto Replace",
         "title": "Open paired locale file"
       },
       {
         "command": "i18n-auto-replace.copyRelativeKeyPath",
+        "category": "I18n Auto Replace",
         "title": "Copy relative key path"
       },
       {
         "command": "i18n-auto-replace.copyRelativeKeyPath",
+        "category": "I18n Auto Replace",
         "title": "Copy relative key path"
       },
       {
         "command": "i18n-auto-replace.quickCreatePairedLocaleFile",
+        "category": "I18n Auto Replace",
         "title": "Quick create paired locale file"
       }
     ],
