@@ -13,7 +13,7 @@ import { getAbsoluteUri, getRelativePath, getWorkspaceInfo, isInSrc, isTargetFil
 // create empty json
 // write json
 
-export async function openLocaleFile(filename: string) {
+export async function openLocaleFile(filename: string, locale?: string) {
   const settings = getSettings()
 
   const uri = Uri.file(filename)
@@ -50,7 +50,7 @@ export async function openLocaleFile(filename: string) {
   if (!localeUri)
     return
 
-  const localesDirs = settings.defaultLocale
+  const localesDirs = locale || settings.defaultLocale
 
   if (info.uri) {
     const targetPath = Uri.joinPath(info.uri, ...settings.localeLocation, localesDirs, ...relativePathList)

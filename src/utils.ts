@@ -18,6 +18,9 @@ const info: WorkspaceInfo = {
 export const emptyJSONContent = `{}
 `
 
+const { fs } = workspace
+const { readDirectory } = fs
+
 export function getWorkspaceInfo() {
   const { workspaceFolders } = workspace
   if (workspaceFolders?.length) {
@@ -37,7 +40,8 @@ export function getWorkspaceInfo() {
 
 export function isTargetFile(path: string) {
   // only check vue file for now
-  if (/.*\.vue$/.test(path))
+  const settings = getSettings()
+  if (settings.extRegex.test(path))
     return true
   return false
 }
@@ -64,4 +68,15 @@ export function getAbsoluteUri(path: string[]) {
     return false
 
   return Uri.joinPath(info.uri, ...path)
+}
+
+export async function getLocaleList() {
+  const settings = getSettings()
+  const localeUri = getAbsoluteUri(settings.localeLocation)
+  if (!localeUri)
+    return
+
+  const localesDirs = await readDirectory(localeUri)
+
+  return localesDirs.map(([locale]) => locale)
 }
