@@ -133,6 +133,24 @@
           "command": "i18n-auto-replace.openSpecificLocaleFile",
           "group": "i18n-auto-replace"
         }
+      ],
+      "editor/context": [
+        {
+          "command": "i18n-auto-replace.copyRelativeKeyPath",
+          "group": "i18n-auto-replace"
+        },
+        {
+          "command": "i18n-auto-replace.quickCreatePairedLocaleFile",
+          "group": "i18n-auto-replace"
+        },
+        {
+          "command": "i18n-auto-replace.openLocaleFile",
+          "group": "i18n-auto-replace"
+        },
+        {
+          "command": "i18n-auto-replace.openSpecificLocaleFile",
+          "group": "i18n-auto-replace"
+        }
       ]
     }
   }
