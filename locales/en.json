@@ -1,0 +1,6 @@
+{
+  "command_copyRelativeKeyPath": "Copy relative key path",
+  "command_quickCreatePairedLocaleFile": "Quick create paired locale file",
+  "command_openLocaleFile": "Open paired locale file",
+  "command_openSpecificLocaleFile": "Open paired specified locale file"
+}
