@@ -25,11 +25,12 @@
     "onStartupFinished"
   ],
   "scripts": {
-    "dev": "pnpm build --watch",
+    "dev": "pnpm run build:i18n && pnpm build --watch",
     "pack": "vsce package --no-dependencies",
     "lint": "eslint .",
     "test": "vitest",
-    "build": "tsup src/index.ts --external vscode",
+    "build:i18n": "esno scripts/build-i18n.ts",
+    "build": "pnpm run build:i18n && tsup src/index.ts --external vscode",
     "release": "bumpp --commit --push --tag",
     "publish": "vsce publish --no-dependencies",
     "typecheck": "tsc --noEmit",
@@ -49,7 +50,10 @@
     "typescript": "^4.7.3",
     "vite": "^2.9.11",
     "vitest": "^0.14.1",
-    "vsce": "^2.9.1"
+    "vsce": "^2.9.1",
+    "fast-glob": "^3.3.1",
+    "fs-extra": "^11.1.1",
+    "@types/fs-extra": "^11.0.1"
   },
   "contributes": {
     "configuration": {
@@ -93,34 +97,40 @@
       {
         "command": "i18n-auto-replace.openSpecificLocaleFile",
         "category": "I18n Auto Replace",
-        "title": "Open paired specified locale file"
+        "title": "%command_openSpecificLocaleFile%"
       },
       {
         "command": "i18n-auto-replace.openLocaleFile",
         "category": "I18n Auto Replace",
-        "title": "Open paired locale file"
+        "title": "%command_openLocaleFile%"
       },
       {
         "command": "i18n-auto-replace.copyRelativeKeyPath",
         "category": "I18n Auto Replace",
-        "title": "Copy relative key path"
-      },
-      {
-        "command": "i18n-auto-replace.copyRelativeKeyPath",
-        "category": "I18n Auto Replace",
-        "title": "Copy relative key path"
+        "title": "%command_copyRelativeKeyPath%"
       },
       {
         "command": "i18n-auto-replace.quickCreatePairedLocaleFile",
         "category": "I18n Auto Replace",
-        "title": "Quick create paired locale file"
+        "title": "%command_quickCreatePairedLocaleFile%"
       }
     ],
     "menus": {
       "explorer/context": [
         {
           "command": "i18n-auto-replace.copyRelativeKeyPath",
-          "title": "copy relative key path",
+          "group": "i18n-auto-replace"
+        },
+        {
+          "command": "i18n-auto-replace.quickCreatePairedLocaleFile",
+          "group": "i18n-auto-replace"
+        },
+        {
+          "command": "i18n-auto-replace.openLocaleFile",
+          "group": "i18n-auto-replace"
+        },
+        {
+          "command": "i18n-auto-replace.openSpecificLocaleFile",
           "group": "i18n-auto-replace"
         }
       ]

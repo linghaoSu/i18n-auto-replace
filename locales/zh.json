@@ -1,0 +1,6 @@
+{
+  "command_copyRelativeKeyPath": "复制 key path",
+  "command_quickCreatePairedLocaleFile": "快速创建缺失的 locale 文件",
+  "command_openLocaleFile": "打开对应的 locale 文件",
+  "command_openSpecificLocaleFile": "选择要打开对应的 locale 文件"
+}
