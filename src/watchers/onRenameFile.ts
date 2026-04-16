@@ -1,4 +1,5 @@
-import { sep } from 'path'
+import { Buffer } from 'node:buffer'
+import { sep } from 'node:path'
 import { Uri, workspace } from 'vscode'
 import { Log } from '../log'
 import { getSettings } from '../settings'
@@ -101,7 +102,7 @@ export async function onRenameFile(oldUri: Uri, newUri: Uri) {
       }
     })
   }
-  catch (e) {
+  catch {
     Log.info('current rename is directory')
     onRenameDirectory(oldUri, newUri)
   }

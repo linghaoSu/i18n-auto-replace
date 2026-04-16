@@ -1,4 +1,4 @@
-import { sep } from 'path'
+import { sep } from 'node:path'
 import { Uri, ViewColumn, window } from 'vscode'
 import { Log } from '../log'
 import { getSettings } from '../settings'

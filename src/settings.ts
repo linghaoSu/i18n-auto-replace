@@ -1,5 +1,6 @@
-import { sep } from 'path'
-import { type Disposable, window, workspace } from 'vscode'
+import type { Disposable } from 'vscode'
+import { sep } from 'node:path'
+import { window, workspace } from 'vscode'
 import { getWorkspaceInfo } from './utils'
 
 const PLUGIN_SCOPE = 'i18n-auto-replace'

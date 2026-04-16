@@ -1,4 +1,5 @@
-import { Uri, commands, window } from 'vscode'
+import type { Uri } from 'vscode'
+import { commands, window } from 'vscode'
 import { Log } from '../log'
 import { getPairedLocales } from '../utils'
 import { openLocaleFile } from './openLocale'

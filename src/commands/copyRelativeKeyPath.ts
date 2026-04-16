@@ -1,5 +1,5 @@
-import { sep } from 'path'
-import { SnippetString, Uri, env, window } from 'vscode'
+import { sep } from 'node:path'
+import { env, SnippetString, Uri, window } from 'vscode'
 import { Log } from '../log'
 import { getRelativePath } from '../utils'
 

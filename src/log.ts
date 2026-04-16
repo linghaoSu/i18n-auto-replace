@@ -1,4 +1,5 @@
-import { type OutputChannel, window } from 'vscode'
+import type { OutputChannel } from 'vscode'
+import { window } from 'vscode'
 
 const EXT_NAME = 'I18n Auto Replace'
 
@@ -33,7 +34,8 @@ export class Log {
         err.stack,
         err.toJSON?.(),
       ]
-        .filter(Boolean).join('\n')
+        .filter(Boolean)
+        .join('\n')
       Log.info(`🐛 ERROR: ${err.name}: ${messages}`, intend)
     }
 

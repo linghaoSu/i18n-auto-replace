@@ -1,4 +1,4 @@
-import { sep } from 'path'
+import { sep } from 'node:path'
 import { Uri, workspace } from 'vscode'
 import { getSettings } from './settings'
 

@@ -1,4 +1,5 @@
-import { sep } from 'path'
+import { Buffer } from 'node:buffer'
+import { sep } from 'node:path'
 import { Uri, workspace } from 'vscode'
 import { Log } from '../log'
 import { getSettings } from '../settings'
