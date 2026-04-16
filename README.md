@@ -76,11 +76,28 @@ scripts/               build scripts (NLS compile, etc.)
 pnpm install
 pnpm dev           # build + watch
 # F5 in VS Code to launch the Extension Development Host
-pnpm typecheck
-pnpm pack          # produce a .vsix
+pnpm check         # typecheck + lint
+pnpm pack          # produce a local .vsix
 ```
 
 The launch config in `.vscode/launch.json` starts the Extension Development Host with `--disable-extensions` so nothing else interferes.
+
+## Release
+
+Releases are tag-driven. Everything else is automated by the `.github/workflows/release.yml` workflow.
+
+```bash
+pnpm run release
+```
+
+This runs `pnpm check`, then [`bumpp`](https://github.com/antfu/bumpp) prompts for the next version, updates `package.json`, regenerates `CHANGELOG.md` via [`changelogen`](https://github.com/unjs/changelogen), commits, tags (`vX.Y.Z`), and pushes.
+
+When the tag lands on GitHub, the workflow:
+
+1. Runs `check` + `build`, packages the extension as `i18n-auto-replace-<tag>.vsix`.
+2. Creates a GitHub Release with auto-generated notes and attaches the `.vsix`.
+3. Publishes to the VS Code Marketplace (needs `VSCE_PAT` secret).
+4. Publishes to Open VSX if `OVSX_PAT` secret is set (skipped otherwise).
 
 ## License
 
