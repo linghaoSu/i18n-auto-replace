@@ -40,8 +40,12 @@ jobs:
           VSCE_PAT: ${{ secrets.VSCE_PAT }}
 
       - name: Publish to Open VSX
-        if: ${{ secrets.OVSX_PAT != '' }}
-        run: npx -y ovsx publish i18n-auto-replace-${{ github.ref_name }}.vsix -p "$OVSX_PAT"
         env:
           OVSX_PAT: ${{ secrets.OVSX_PAT }}
+        run: |
+          if [ -z "$OVSX_PAT" ]; then
+            echo "OVSX_PAT not configured, skipping Open VSX publish."
+            exit 0
+          fi
+          npx -y ovsx publish i18n-auto-replace-${{ github.ref_name }}.vsix -p "$OVSX_PAT"
         continue-on-error: true
