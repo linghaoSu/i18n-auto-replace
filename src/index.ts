@@ -1,16 +1,30 @@
-import { sep } from 'path'
-import { type Disposable, SnippetString, Uri, commands, env, window, workspace } from 'vscode'
+import { type Disposable, Uri, commands, window, workspace } from 'vscode'
 import { disposeSettingListener, getSettings, initialSetting } from './settings'
-import { onCreateFile } from './create'
-import { onRenameFile } from './rename'
-import { onDeleteFile } from './delete'
+import { onCreateFile } from './watchers/onCreateFile'
+import { onRenameFile } from './watchers/onRenameFile'
+import { onDeleteFile } from './watchers/onDeleteFile'
 import { Log } from './log'
-import { openLocaleFile } from './openLocale'
-import { getLocaleList, getRelativePath } from './utils'
+import { openLocaleFile, openSourceFile } from './commands/openLocale'
+import { copyRelativeKeyPath } from './commands/copyRelativeKeyPath'
+import { getPairedLocales, isLocaleFile, isMenuTargetFile } from './utils'
+
+const TARGET_FILE_CONTEXT_KEY = 'i18nAutoReplace.isTargetFile'
+const LOCALE_FILE_CONTEXT_KEY = 'i18nAutoReplace.isLocaleFile'
 
 let createListenerHandler: Disposable | undefined
 let renameListenerHandler: Disposable | undefined
 let deleteListenerHandler: Disposable | undefined
+let activeEditorListenerHandler: Disposable | undefined
+let configChangeListenerHandler: Disposable | undefined
+
+function updateEditorContexts() {
+  const editor = window.activeTextEditor
+  const uri = editor?.document.uri
+  const isTarget = uri ? isMenuTargetFile(uri) : false
+  const isLocale = uri ? isLocaleFile(uri) : false
+  commands.executeCommand('setContext', TARGET_FILE_CONTEXT_KEY, isTarget)
+  commands.executeCommand('setContext', LOCALE_FILE_CONTEXT_KEY, isLocale)
+}
 
 export function activate() {
   Log.info('i18n auto replace activated! ')
@@ -18,24 +32,41 @@ export function activate() {
 
   commands.registerCommand('i18n-auto-replace.openSpecificLocaleFile', async (filename?: Uri) => {
     const { activeTextEditor } = window
-    const localeList = await getLocaleList()
+    const sourceUri = filename ?? activeTextEditor?.document?.uri
+    if (!sourceUri)
+      return
 
-    if (localeList) {
-      const locale = await window.showQuickPick(
-        localeList,
-        {
-          canPickMany: false,
-        },
-      )
-      if (filename) {
-        Log.info(filename.path)
-        openLocaleFile(filename.path, locale)
-      }
-      else if (activeTextEditor?.document?.fileName) {
-        Log.info(activeTextEditor?.document?.fileName)
-        openLocaleFile(activeTextEditor?.document?.fileName, locale)
-      }
+    const localeList = await getPairedLocales(sourceUri)
+    if (!localeList.length) {
+      window.showWarningMessage('No paired locale files found for this file.')
+      return
     }
+
+    const locale = await window.showQuickPick(
+      localeList,
+      {
+        canPickMany: false,
+      },
+    )
+    if (!locale)
+      return
+
+    if (filename) {
+      Log.info(filename.path)
+      openLocaleFile(filename.path, locale)
+    }
+    else if (activeTextEditor?.document?.fileName) {
+      Log.info(activeTextEditor?.document?.fileName)
+      openLocaleFile(activeTextEditor?.document?.fileName, locale)
+    }
+  })
+
+  commands.registerCommand('i18n-auto-replace.openSourceFile', (filename?: Uri) => {
+    const { activeTextEditor } = window
+    if (filename)
+      openSourceFile(filename.path)
+    else if (activeTextEditor?.document?.fileName)
+      openSourceFile(activeTextEditor.document.fileName)
   })
 
   commands.registerCommand('i18n-auto-replace.quickCreatePairedLocaleFile', async (filename?: Uri) => {
@@ -55,48 +86,8 @@ export function activate() {
   })
 
   commands.registerCommand('i18n-auto-replace.copyRelativeKeyPath', (filename?: Uri) => {
-    let path: false | string = false
-    const { activeTextEditor } = window
-
-    if (filename) {
-      path = getRelativePath(filename.toString())
-    }
-    else {
-      if (activeTextEditor?.document?.fileName) {
-        const activeFileName = activeTextEditor?.document?.fileName
-        const uri = Uri.file(activeFileName)
-
-        const activePath = uri.toString()
-
-        path = getRelativePath(activePath)
-      }
-    }
-
-    if (!path)
-      return
-
-    const reduceSuffixPath = path.split('.')[0]
-
-    const pathList = reduceSuffixPath.split(sep)
-
-    if (pathList[0] === 'src') {
-      const targetPathList = pathList.slice(1)
-      const keyPath = targetPathList.join('.')
-
-      if (filename) {
-        Log.info(`[COPY PATH]: ${keyPath}`)
-        env.clipboard.writeText(keyPath)
-      }
-      else {
-        Log.info(`[INSERT PATH]: ${keyPath}`)
-        activeTextEditor?.insertSnippet(new SnippetString(keyPath))
-      }
-    }
-    else {
-      Log.warn('[COPY PATH]: not in src dir')
-    }
+    copyRelativeKeyPath(filename)
   })
-  // only support single workspace for now
 
   createListenerHandler = workspace.onDidCreateFiles((e) => {
     const { files } = e
@@ -114,6 +105,17 @@ export function activate() {
     if (enableDelete)
       files.forEach(item => onDeleteFile(item))
   })
+
+  activeEditorListenerHandler = window.onDidChangeActiveTextEditor(() => {
+    updateEditorContexts()
+  })
+
+  configChangeListenerHandler = workspace.onDidChangeConfiguration((e) => {
+    if (e.affectsConfiguration('i18n-auto-replace'))
+      updateEditorContexts()
+  })
+
+  updateEditorContexts()
 }
 
 export function deactivate() {
@@ -127,5 +129,15 @@ export function deactivate() {
 
   deleteListenerHandler?.dispose()
   deleteListenerHandler = undefined
+
+  activeEditorListenerHandler?.dispose()
+  activeEditorListenerHandler = undefined
+
+  configChangeListenerHandler?.dispose()
+  configChangeListenerHandler = undefined
+
+  commands.executeCommand('setContext', TARGET_FILE_CONTEXT_KEY, false)
+  commands.executeCommand('setContext', LOCALE_FILE_CONTEXT_KEY, false)
+
   Log.info('i18n auto replace deactivate! ')
 }

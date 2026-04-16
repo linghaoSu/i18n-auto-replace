@@ -1,22 +1,13 @@
 import { sep } from 'path'
 import { Uri, workspace } from 'vscode'
-import { Log } from './log'
-import { getSettings } from './settings'
-import { emptyJSONContent, getAbsoluteUri, getRelativePath, getWorkspaceInfo, isInSrc, isTargetFile } from './utils'
+import { Log } from '../log'
+import { getSettings } from '../settings'
+import { getAbsoluteUri, getRelativePath, getWorkspaceInfo, isExcluded, isInSrc, isTargetFile } from '../utils'
 
 const { fs } = workspace
-const { readDirectory, writeFile, readFile } = fs
+const { readDirectory, delete: deleteFile } = fs
 
-// get relative path
-// is in src dir?
-// is a target file?
-// get corresponding locale path
-// create dir recursively
-// is file exist already? yes create noty and exit, no to next step
-// create empty json
-// write json
-
-export async function onCreateFile(uri: Uri) {
+export async function onDeleteFile(uri: Uri) {
   const settings = getSettings()
 
   const path = uri.toString()
@@ -33,6 +24,9 @@ export async function onCreateFile(uri: Uri) {
     return
 
   if (!isInSrc(relativePath))
+    return
+
+  if (isExcluded(relativePath))
     return
 
   const relativePathList = relativePath.split(sep)
@@ -56,15 +50,12 @@ export async function onCreateFile(uri: Uri) {
   localesDirs.forEach((dir) => {
     if (info.uri) {
       const targetPath = Uri.joinPath(info.uri, ...settings.localeLocation, dir[0], ...relativePathList)
+      deleteFile(targetPath).then(() => {
 
-      readFile(targetPath).then(() => { }, () => {
-        writeFile(targetPath, Buffer.from(emptyJSONContent)).then(() => {
-
-        }, () => {
-          Log.error({
-            name: 'CREATE -> ',
-            message: `${targetPath.toString()} Failed.`,
-          })
+      }, () => {
+        Log.error({
+          name: 'DELETE -> ',
+          message: `${targetPath.toString()} Failed.`,
         })
       })
     }

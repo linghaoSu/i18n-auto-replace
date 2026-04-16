@@ -1,8 +1,8 @@
 import { sep } from 'path'
 import { Uri, workspace } from 'vscode'
-import { Log } from './log'
-import { getSettings } from './settings'
-import { getAbsoluteUri, getRelativePath, getWorkspaceInfo } from './utils'
+import { Log } from '../log'
+import { getSettings } from '../settings'
+import { getAbsoluteUri, getRelativePath, getWorkspaceInfo, isExcluded } from '../utils'
 
 const { fs } = workspace
 const { readDirectory, readFile, rename, writeFile } = fs
@@ -32,6 +32,9 @@ export async function onRenameFile(oldUri: Uri, newUri: Uri) {
   const newUriRelativePath = getRelativePath(newUri.toString())
 
   if (!oldUriRelativePath || !newUriRelativePath)
+    return
+
+  if (isExcluded(oldUriRelativePath) && isExcluded(newUriRelativePath))
     return
 
   // 1. get old locale path in file

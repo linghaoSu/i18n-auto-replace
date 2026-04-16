@@ -7,19 +7,22 @@
   "name": "i18n-auto-replace",
   "displayName": "I18n Auto Replace",
   "version": "0.0.12",
-  "packageManager": "pnpm@7.0.1",
-  "description": "",
+  "packageManager": "pnpm@10.33.0",
+  "description": "Auto create, open, and sync paired locale JSON files for i18n-enabled projects.",
   "license": "MIT",
+  "icon": "resources/icon.png",
   "main": "./dist/index.js",
   "repository": {
     "type": "git",
     "url": "https://github.com/linghaoSu/i18n-auto-replace"
   },
   "files": [
-    "dist"
+    "dist",
+    "resources"
   ],
   "engines": {
-    "vscode": "^1.68.0"
+    "vscode": "^1.68.0",
+    "node": ">=20"
   },
   "activationEvents": [
     "onStartupFinished"
@@ -39,12 +42,12 @@
   "devDependencies": {
     "@antfu/eslint-config": "^0.25.1",
     "@babel/types": "^7.18.4",
-    "@types/node": "^17.0.41",
+    "@types/node": "^22.0.0",
     "@types/vscode": "^1.68.0",
     "bumpp": "^7.1.1",
     "eslint": "^8.17.0",
     "esno": "^0.16.3",
-    "pnpm": "^7.1.9",
+    "pnpm": "^10.33.0",
     "tsup": "^6.1.0",
     "rimraf": "^3.0.2",
     "typescript": "^4.7.3",
@@ -90,6 +93,13 @@
           "type": "string",
           "default": "zh-CN",
           "description": "默认打开的 locale 文件"
+        },
+        "i18n-auto-replace.exclude": {
+          "type": "array",
+          "default": [
+            "src/locales"
+          ],
+          "description": "不参与 i18n 联动的路径前缀列表，默认排除 src/locales 目录本身"
         }
       }
     },
@@ -97,12 +107,14 @@
       {
         "command": "i18n-auto-replace.openSpecificLocaleFile",
         "category": "I18n Auto Replace",
-        "title": "%command_openSpecificLocaleFile%"
+        "title": "%command_openSpecificLocaleFile%",
+        "icon": "$(list-selection)"
       },
       {
         "command": "i18n-auto-replace.openLocaleFile",
         "category": "I18n Auto Replace",
-        "title": "%command_openLocaleFile%"
+        "title": "%command_openLocaleFile%",
+        "icon": "$(globe)"
       },
       {
         "command": "i18n-auto-replace.copyRelativeKeyPath",
@@ -113,6 +125,30 @@
         "command": "i18n-auto-replace.quickCreatePairedLocaleFile",
         "category": "I18n Auto Replace",
         "title": "%command_quickCreatePairedLocaleFile%"
+      },
+      {
+        "command": "i18n-auto-replace.openSourceFile",
+        "category": "I18n Auto Replace",
+        "title": "%command_openSourceFile%",
+        "icon": "$(go-to-file)"
+      }
+    ],
+    "submenus": [
+      {
+        "id": "i18n-auto-replace.sourceFileMenu",
+        "label": "I18n Auto Replace",
+        "icon": {
+          "light": "resources/i18n-light.svg",
+          "dark": "resources/i18n-dark.svg"
+        }
+      },
+      {
+        "id": "i18n-auto-replace.localeFileMenu",
+        "label": "I18n Auto Replace",
+        "icon": {
+          "light": "resources/i18n-light.svg",
+          "dark": "resources/i18n-dark.svg"
+        }
       }
     ],
     "menus": {
@@ -150,6 +186,42 @@
         {
           "command": "i18n-auto-replace.openSpecificLocaleFile",
           "group": "i18n-auto-replace"
+        }
+      ],
+      "editor/title": [
+        {
+          "submenu": "i18n-auto-replace.sourceFileMenu",
+          "when": "i18nAutoReplace.isTargetFile",
+          "group": "navigation@1"
+        },
+        {
+          "submenu": "i18n-auto-replace.localeFileMenu",
+          "when": "i18nAutoReplace.isLocaleFile",
+          "group": "navigation@1"
+        }
+      ],
+      "i18n-auto-replace.sourceFileMenu": [
+        {
+          "command": "i18n-auto-replace.openLocaleFile",
+          "group": "1_open@1"
+        },
+        {
+          "command": "i18n-auto-replace.openSpecificLocaleFile",
+          "group": "1_open@2"
+        },
+        {
+          "command": "i18n-auto-replace.quickCreatePairedLocaleFile",
+          "group": "2_create@1"
+        }
+      ],
+      "i18n-auto-replace.localeFileMenu": [
+        {
+          "command": "i18n-auto-replace.openSourceFile",
+          "group": "1_open@1"
+        },
+        {
+          "command": "i18n-auto-replace.openSpecificLocaleFile",
+          "group": "1_open@2"
         }
       ]
     }

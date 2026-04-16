@@ -8,6 +8,7 @@ const EXT_KEY = 'ext'
 const ENABLE_DELETE_KEY = 'enableDelete'
 const SRC_PATH_KEY = 'srcPath'
 const DEFAULT_LOCALE = 'defaultLocaleLang'
+const EXCLUDE_KEY = 'exclude'
 
 interface ReplaceSettings {
   localePath: string[]
@@ -15,6 +16,7 @@ interface ReplaceSettings {
   enableDelete: boolean
   srcPath: string[]
   defaultLocale: string
+  exclude: string[]
 }
 
 const replaceSettings: ReplaceSettings = {
@@ -23,14 +25,23 @@ const replaceSettings: ReplaceSettings = {
   enableDelete: false,
   srcPath: ['src'],
   defaultLocale: 'zh-CN',
+  exclude: ['src/locales'],
+}
+
+function normalizeExclude(list: string[]) {
+  return list
+    .map(item => item.replace(/\\/g, '/').replace(/\/+$/, ''))
+    .filter(Boolean)
 }
 
 const usedSettings = {
   extRegex: new RegExp(`.*(\.(${replaceSettings.ext.join('|')}))$`),
+  ext: replaceSettings.ext,
   srcLocation: replaceSettings.srcPath.join(sep),
   localeLocation: replaceSettings.localePath,
   enableDelete: replaceSettings.enableDelete,
   defaultLocale: replaceSettings.defaultLocale,
+  excludeList: normalizeExclude(replaceSettings.exclude),
 }
 
 // .*(\.(vue|ts))$
@@ -47,6 +58,7 @@ export function updateSettings() {
   replaceSettings.enableDelete = settings.get(ENABLE_DELETE_KEY, false)
   replaceSettings.srcPath = settings.get(SRC_PATH_KEY, ['src'])
   replaceSettings.defaultLocale = settings.get(DEFAULT_LOCALE, 'zh-CN')
+  replaceSettings.exclude = settings.get(EXCLUDE_KEY, ['src/locales'])
 
   applySettings()
 }
@@ -54,10 +66,12 @@ export function updateSettings() {
 function applySettings() {
   Object.assign(usedSettings, {
     extRegex: new RegExp(`.*(\.(${replaceSettings.ext.join('|')}))$`),
+    ext: replaceSettings.ext,
     srcLocation: replaceSettings.srcPath.join(sep),
     localeLocation: replaceSettings.localePath,
     enableDelete: replaceSettings.enableDelete,
-    DEFAULT_LOCALE: replaceSettings.defaultLocale,
+    defaultLocale: replaceSettings.defaultLocale,
+    excludeList: normalizeExclude(replaceSettings.exclude),
   })
 }
 
