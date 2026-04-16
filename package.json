@@ -131,6 +131,21 @@
         "category": "I18n Auto Replace",
         "title": "%command_openSourceFile%",
         "icon": "$(go-to-file)"
+      },
+      {
+        "command": "i18n-auto-replace.openLocale.en-US",
+        "category": "I18n Auto Replace",
+        "title": "Open en-US"
+      },
+      {
+        "command": "i18n-auto-replace.openLocale.zh-CN",
+        "category": "I18n Auto Replace",
+        "title": "Open zh-CN"
+      },
+      {
+        "command": "i18n-auto-replace.openLocale.ja",
+        "category": "I18n Auto Replace",
+        "title": "Open ja"
       }
     ],
     "submenus": [
@@ -210,8 +225,20 @@
           "group": "1_open@2"
         },
         {
+          "command": "i18n-auto-replace.openLocale.en-US",
+          "group": "2_preset@1"
+        },
+        {
+          "command": "i18n-auto-replace.openLocale.zh-CN",
+          "group": "2_preset@2"
+        },
+        {
+          "command": "i18n-auto-replace.openLocale.ja",
+          "group": "2_preset@3"
+        },
+        {
           "command": "i18n-auto-replace.quickCreatePairedLocaleFile",
-          "group": "2_create@1"
+          "group": "3_create@1"
         }
       ],
       "i18n-auto-replace.localeFileMenu": [
@@ -222,6 +249,18 @@
         {
           "command": "i18n-auto-replace.openSpecificLocaleFile",
           "group": "1_open@2"
+        },
+        {
+          "command": "i18n-auto-replace.openLocale.en-US",
+          "group": "2_preset@1"
+        },
+        {
+          "command": "i18n-auto-replace.openLocale.zh-CN",
+          "group": "2_preset@2"
+        },
+        {
+          "command": "i18n-auto-replace.openLocale.ja",
+          "group": "2_preset@3"
         }
       ]
     }

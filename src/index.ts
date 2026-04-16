@@ -6,6 +6,7 @@ import { onDeleteFile } from './watchers/onDeleteFile'
 import { Log } from './log'
 import { openLocaleFile, openSourceFile } from './commands/openLocale'
 import { copyRelativeKeyPath } from './commands/copyRelativeKeyPath'
+import { registerPresetLocaleCommands } from './commands/openPresetLocale'
 import { getPairedLocales, isLocaleFile, isMenuTargetFile } from './utils'
 
 const TARGET_FILE_CONTEXT_KEY = 'i18nAutoReplace.isTargetFile'
@@ -88,6 +89,8 @@ export function activate() {
   commands.registerCommand('i18n-auto-replace.copyRelativeKeyPath', (filename?: Uri) => {
     copyRelativeKeyPath(filename)
   })
+
+  registerPresetLocaleCommands()
 
   createListenerHandler = workspace.onDidCreateFiles((e) => {
     const { files } = e
